@@ -594,8 +594,8 @@ if __name__ == '__main__':
     parser.add_argument('--data_path', type=str, required=True,
                         help='Path to dataset file')
     parser.add_argument('--dataset_name', type=str, default='twitter_financial',
-                        choices=['twitter_financial', 'financial_tweets_2023', 'tweetfinsent', 'phrasebank', 'semeval', 'sentfin'],
-                        help='Dataset name (primary: twitter_financial, financial_tweets_2023, tweetfinsent; legacy: phrasebank, semeval, sentfin)')
+                        choices=['twitter_financial'],
+                        help='Dataset name (must be twitter_financial)')
     parser.add_argument('--output_dir', type=str, default='results',
                         help='Directory to save reports')
     

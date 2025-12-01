@@ -33,7 +33,7 @@ def train_model(
     
     Args:
         data_path: Path to dataset file
-        dataset_name: Name of dataset ('phrasebank' or 'semeval')
+        dataset_name: Dataset name (must be 'twitter_financial')
         test_size: Proportion of data for testing
         random_state: Random seed for reproducibility
         max_features: Maximum TF-IDF features
@@ -134,8 +134,8 @@ if __name__ == '__main__':
     parser.add_argument('--data_path', type=str, required=True,
                         help='Path to dataset file')
     parser.add_argument('--dataset_name', type=str, default='twitter_financial',
-                        choices=['twitter_financial', 'financial_tweets_2023', 'tweetfinsent', 'phrasebank', 'semeval', 'sentfin'],
-                        help='Dataset name (primary: twitter_financial, financial_tweets_2023, tweetfinsent; legacy: phrasebank, semeval, sentfin)')
+                        choices=['twitter_financial'],
+                        help='Dataset name (must be twitter_financial)')
     parser.add_argument('--test_size', type=float, default=0.2,
                         help='Test set proportion')
     parser.add_argument('--max_features', type=int, default=10000,

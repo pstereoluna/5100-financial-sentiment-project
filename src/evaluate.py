@@ -28,7 +28,7 @@ def evaluate_model(
     Args:
         model_path: Path to saved model file
         data_path: Path to test dataset file
-        dataset_name: Name of dataset ('phrasebank' or 'semeval')
+        dataset_name: Dataset name (must be 'twitter_financial')
         output_dir: Directory to save evaluation results
     """
     # Load model
@@ -130,8 +130,8 @@ if __name__ == '__main__':
     parser.add_argument('--data_path', type=str, required=True,
                         help='Path to test dataset file')
     parser.add_argument('--dataset_name', type=str, default='twitter_financial',
-                        choices=['twitter_financial', 'financial_tweets_2023', 'tweetfinsent', 'phrasebank', 'semeval', 'sentfin'],
-                        help='Dataset name (primary: twitter_financial, financial_tweets_2023, tweetfinsent; legacy: phrasebank, semeval, sentfin)')
+                        choices=['twitter_financial'],
+                        help='Dataset name (must be twitter_financial)')
     parser.add_argument('--output_dir', type=str, default='results',
                         help='Directory to save evaluation results')
     

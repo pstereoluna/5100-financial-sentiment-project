@@ -6,7 +6,7 @@ This guide shows you multiple ways to create a presentation from your project re
 
 ### Step 1: Configure Notebook for Slides
 
-1. Open your notebook: `notebooks/02_train_baseline_modern.ipynb` or `notebooks/03_label_quality_modern.ipynb`
+1. Open your notebook: `notebooks/02_train_baseline.ipynb` or `notebooks/03_label_quality.ipynb` or `notebooks/04_final_report.ipynb`
 2. In Jupyter, go to **View → Cell Toolbar → Slideshow**
 3. Set each cell's slide type:
    - **Slide**: Main content slides
@@ -26,7 +26,9 @@ Cell 5: Results - Performance (Slide)
 Cell 6: Results - Visualizations (Slide)
 Cell 7: Label Quality Analysis (Slide)
 Cell 8: Key Findings (Slide)
-Cell 9: Conclusion (Slide)
+Cell 9: Limitations (Slide)
+Cell 10: Future Work (Slide)
+Cell 11: Conclusion (Slide)
 ```
 
 ### Step 3: Export to Slides
@@ -37,13 +39,13 @@ Cell 9: Conclusion (Slide)
 pip install jupyter-reveal
 
 # Export notebook to reveal.js slides
-jupyter nbconvert notebooks/03_full_pipeline_report.ipynb --to slides
+jupyter nbconvert notebooks/04_final_report.ipynb --to slides
 ```
 
 **Method B: Using nbconvert**
 ```bash
 # Export to HTML slides
-jupyter nbconvert notebooks/03_full_pipeline_report.ipynb \
+jupyter nbconvert notebooks/04_final_report.ipynb \
     --to slides \
     --reveal-prefix reveal.js \
     --output presentation.html
@@ -52,7 +54,7 @@ jupyter nbconvert notebooks/03_full_pipeline_report.ipynb \
 **Method C: Export to PDF**
 ```bash
 # Export to PDF (via HTML)
-jupyter nbconvert notebooks/03_full_pipeline_report.ipynb \
+jupyter nbconvert notebooks/04_final_report.ipynb \
     --to pdf \
     --output presentation.pdf
 ```
@@ -93,165 +95,120 @@ pandoc PRESENTATION.md -o presentation.pdf
 
 ## Option 3: Create PowerPoint from Results
 
-### Automated Script
+### Manual Creation
 
-```bash
-# Generate summary first
-python create_presentation.py
+Use the results from `results/` directory:
+- Confusion matrix: `results/confusion_matrix.png`
+- Top features: `results/top_features.png`
+- Label quality analysis: `results/label_quality_analysis.png`
+- CSV reports: `results/*.csv`
 
-# Then manually create PowerPoint using:
-# - PRESENTATION_SUMMARY.md for content
-# - results/*.png for visualizations
-```
-
-### Manual Steps
-
-1. **Open PowerPoint/Google Slides**
-2. **Use `PRESENTATION.md`** as content outline
-3. **Insert visualizations** from `results/`:
-   - `confusion_matrix.png`
-   - `label_distribution.png`
-   - `top_features.png`
-   - `label_quality_analysis.png`
-4. **Add key metrics** from `PRESENTATION_SUMMARY.md`
+Create slides manually in PowerPoint/Google Slides using these visualizations.
 
 ---
 
-## Option 4: Interactive Presentation with Jupyter
+## Presentation Structure
 
-### Present Directly from Notebook
+### Recommended Slides (10-15 minutes)
 
-1. **Install RISE** (Reveal.js Jupyter extension):
-```bash
-pip install rise
-jupyter-nbextension install rise --py --sys-prefix
-jupyter-nbextension enable rise --py --sys-prefix
-```
+1. **Title Slide** (30 sec)
+   - Project title
+   - Your name
+   - CS5100 Final Project
 
-2. **Open notebook** in Jupyter
-3. **Click "Enter/Exit RISE Slideshow"** button
-4. **Present directly** from notebook!
+2. **Problem Statement** (1 min)
+   - Why financial sentiment analysis?
+   - Why social-media text?
+   - Research goals
 
-**Navigation**:
-- Space/Arrow keys: Navigate slides
-- Esc: Exit slideshow mode
+3. **Dataset** (1 min)
+   - Twitter Financial News Sentiment (Zeroshot, 2023)
+   - Dataset characteristics
+   - Label distribution (show class imbalance)
 
----
+4. **Methodology** (2 min)
+   - Preprocessing pipeline
+   - TF-IDF + Logistic Regression
+   - Why baseline model (interpretability)
 
-## Quick Presentation Checklist
-
-### Content to Include
-
-- [ ] **Title slide** with project name
-- [ ] **Problem statement** - Why this matters
-- [ ] **Dataset overview** - Size, distribution
-- [ ] **Methodology** - Preprocessing + Model
-- [ ] **Results** - Accuracy, confusion matrix
-- [ ] **Visualizations** - All key plots
-- [ ] **Key findings** - Main insights
-- [ ] **Future work** - Next steps
-- [ ] **Q&A slide**
-
-### Visualizations to Include
-
-- [ ] Confusion matrix
-- [ ] Label distribution
-- [ ] Top features by class
-- [ ] Label quality analysis
-- [ ] Sample predictions (if relevant)
-
-### Metrics to Highlight
-
-- [ ] Overall accuracy
-- [ ] Per-class precision/recall/F1
-- [ ] Misclassification rate
-- [ ] Ambiguous prediction rate
-
----
-
-## Presentation Tips
-
-### 1. Start Strong
-- Clear problem statement
-- Real-world relevance
-- Impact/importance
-
-### 2. Keep It Visual
-- Use plots from `results/`
-- Show examples, not just numbers
-- One key point per slide
-
-### 3. Tell a Story
-- Problem → Solution → Results → Impact
-- Connect technical details to business value
-
-### 4. Practice Timing
-- Aim for 10-15 minutes
-- 1-2 minutes per slide
-- Leave time for Q&A
-
-### 5. Prepare for Questions
-- Know your model's limitations
-- Understand the data quality issues
-- Have examples ready
-
----
-
-## Resources
-
-### Files Available
-
-- `PRESENTATION.md` - Slide content outline
-- `PRESENTATION_SUMMARY.md` - Auto-generated summary (run `create_presentation.py`)
-- `results/*.png` - All visualizations
-- `results/*.csv` - Detailed results data
-- `notebooks/03_full_pipeline_report.ipynb` - Complete analysis
-
-### Quick Commands
-
-```bash
-# Generate presentation summary
-python create_presentation.py
-
-# Export notebook to slides
-jupyter nbconvert notebooks/03_full_pipeline_report.ipynb --to slides
-
-# View results
-open results/confusion_matrix.png  # Mac
-xdg-open results/confusion_matrix.png  # Linux
-```
-
----
-
-## Example Presentation Flow
-
-1. **Introduction** (2 min)
-   - Financial sentiment analysis importance
-   - Project goal
-
-2. **Dataset & Methodology** (3 min)
-   - Modern Twitter datasets overview (Twitter Financial, Financial Tweets 2023, TweetFinSent)
-   - Preprocessing steps
-   - Model architecture
-
-3. **Results** (5 min)
-   - Performance metrics
+5. **Results - Performance** (2 min)
+   - Accuracy, macro F1-score
    - Confusion matrix
-   - Top features
-   - Label quality insights
+   - Per-class performance
+   - Highlight neutral class difficulty
 
-4. **Discussion** (3 min)
-   - Key findings
-   - Challenges & solutions
-   - Future work
+6. **Results - Interpretability** (1 min)
+   - Top features for each class
+   - Feature weight visualization
 
-5. **Q&A** (2 min)
+7. **Label Quality Analysis** (3 min)
+   - Misclassifications
+   - Ambiguous predictions
+   - Noisy labels
+   - Neutral ambiguous zone
+   - Borderline cases
+   - Dataset ambiguity metrics
 
-**Total: ~15 minutes**
+8. **Key Findings** (2 min)
+   - Social-media text is noisier
+   - Neutral zone is challenging
+   - Class imbalance affects performance
+   - Label quality matters more than accuracy
+
+9. **Limitations** (1 min)
+   - Baseline model (cannot capture sarcasm/long-range dependencies)
+   - Class imbalance
+   - Social-media ambiguity
+
+10. **Future Work** (1 min)
+    - FinBERT for stronger performance
+    - Active learning for ambiguous cases
+    - Additional features
+
+11. **Conclusion** (30 sec)
+    - Summary
+    - Alignment with proposal
+    - Main contribution: label quality evaluation
 
 ---
 
-Good luck with your presentation! 🎤
+## Tips for Effective Presentation
 
+1. **Focus on label quality**: This is your main research contribution
+2. **Show visual examples**: Use confusion matrix, top features, label quality plots
+3. **Explain limitations**: Be honest about baseline model limitations
+4. **Emphasize social-media challenges**: Why label quality matters more for noisy text
+5. **Keep it concise**: 10-15 minutes, focus on key findings
 
+---
 
+## Key Points to Emphasize
+
+- **Why social-media text**: Inherently noisier, better for label quality research
+- **Why baseline model**: Interpretability + lightweight NLP requirement
+- **Label quality contribution**: More valuable than raw accuracy metrics
+- **Neutral class difficulty**: Key finding from label quality analysis
+- **Class imbalance**: Affects model performance on minority classes
+
+---
+
+## Visual Aids
+
+Make sure to include:
+- Confusion matrix (shows neutral class difficulty)
+- Top features visualization (interpretability)
+- Label quality summary plots
+- Example error cases (high-confidence misclassifications)
+- Ambiguous case examples
+
+---
+
+## Practice
+
+1. Time yourself (aim for 10-15 minutes)
+2. Practice explaining label quality findings
+3. Be ready to discuss limitations and future work
+4. Prepare answers for questions about:
+   - Why not use deep learning?
+   - How to improve performance?
+   - What makes this research contribution valuable?

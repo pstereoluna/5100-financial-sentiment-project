@@ -1,10 +1,10 @@
-# Financial Social-Media Sentiment Classification Project
+# Financial Social-Media Sentiment Classification with Label Quality Evaluation
 
-A machine learning pipeline for **financial social-media sentiment classification** with label quality evaluation.
+A machine learning pipeline for **financial social-media sentiment classification** with comprehensive label quality evaluation, aligned with CS5100 research proposal.
 
 ## Project Overview
 
-This project implements a complete ML pipeline for classifying financial sentiment from **social-media text** (Twitter) using:
+This project implements a complete ML pipeline for classifying financial sentiment from **Twitter social-media text** using:
 - **TF-IDF vectorization** (1-2 grams)
 - **Logistic Regression** classifier
 - **Interpretability** via feature weights
@@ -13,60 +13,47 @@ This project implements a complete ML pipeline for classifying financial sentime
 ### Research Focus
 
 This project aligns with the CS5100 research proposal focusing on:
-1. **Financial social-media sentiment** (post-2020 Twitter datasets, not news articles)
+1. **Financial social-media sentiment** (Twitter dataset, not news articles)
 2. **Lightweight NLP** (TF-IDF + Logistic Regression baseline)
 3. **Interpretability** (feature weights for model decisions)
 4. **Label quality evaluation** (identifying ambiguous and noisy labels in social-media text)
 
 **Why social-media text?** Social-media financial posts (Twitter) are inherently noisier than news articles, making them ideal for studying label quality issues, annotation inconsistencies, and model robustness.
 
-## Features
+## Dataset
 
-- **Text preprocessing** optimized for social media (URL removal, cashtag removal, hashtag/mention removal)
-- **Primary datasets**: Three modern post-2020 Twitter financial sentiment datasets
-- **Model training and evaluation pipeline** with TF-IDF + Logistic Regression
-- **Label quality analysis** specifically designed for noisy social-media text:
-  - Misclassification patterns
-  - Ambiguous predictions (low-confidence cases)
-  - Noisy label detection (high-confidence disagreements)
-  - Neutral zone analysis (borderline positive/negative vs neutral)
-  - Borderline case detection
-  - Dataset-inherent ambiguity quantification
-- Comprehensive test suite
-- Jupyter notebooks for EDA, baseline training, and label quality analysis
+**Twitter Financial News Sentiment** (Zeroshot, 2023):
+- **Source**: Real Twitter financial posts
+- **Samples**: ~9,500 tweets
+- **Labels**: 3-class (0=neutral, 1=positive, 2=negative) → unified to positive/neutral/negative
+- **Format**: CSV with `text` and `label` columns
+- **Characteristics**: 
+  - Short, informal text (typical of social media)
+  - Real-world noise (hashtags, mentions, cashtags)
+  - Higher ambiguity than news articles
+  - Ideal for label quality evaluation research
 
-## Directory Structure
+### Dataset Setup
 
-```
-financial-sentiment-project/
-├── data/                    # Dataset files (not included in repo)
-├── src/                     # Source code
-│   ├── preprocess.py        # Text preprocessing
-│   ├── dataset_loader.py    # Dataset loaders
-│   ├── model.py            # Model definition
-│   ├── train.py            # Training script
-│   ├── evaluate.py         # Evaluation script
-│   ├── label_quality.py    # Label quality analysis
-│   └── download_modern_datasets.py  # Dataset download helper
-├── notebooks/              # Jupyter notebooks
-│   ├── 01_modern_dataset_eda.ipynb       # EDA for modern datasets
-│   ├── 02_train_baseline_modern.ipynb    # Baseline training
-│   └── 03_label_quality_modern.ipynb    # Label quality analysis
-├── tests/                  # Unit tests
-│   ├── test_preprocess.py
-│   ├── test_model.py
-│   └── test_label_quality.py
-├── results/                # Output directory (models, plots, reports)
-├── README.md
-├── requirements.txt
-└── .gitignore
-```
+1. Download the dataset from [Hugging Face](https://huggingface.co/datasets/Zeroshot/twitter-financial-news-sentiment) or place your CSV file in `data/twitter_financial_train.csv`
+
+2. Expected CSV format:
+   ```csv
+   text,label
+   "Stock prices are rising!",1
+   "Market is stable",0
+   "Prices falling",2
+   ```
 
 ## Installation
 
 ### Local Installation
 
-1. Clone or download this repository
+1. Clone this repository:
+```bash
+git clone <repository-url>
+cd financial-sentiment-project
+```
 
 2. Install dependencies:
 ```bash
@@ -82,104 +69,42 @@ nltk.download('stopwords')
 
 ### Google Colab
 
-**项目完全支持Google Colab！** 查看 [COLAB_SETUP.md](COLAB_SETUP.md) 获取详细指南。
+See [COLAB_SETUP.md](COLAB_SETUP.md) for detailed Google Colab setup instructions.
 
-## Dataset Setup
+## Quick Start
 
-### Primary Datasets (Post-2020, Social-Media)
+### 1. Train Model
 
-This project uses **three modern post-2020 Twitter financial sentiment datasets**:
-
-1. **Twitter Financial News Sentiment** (Zeroshot, 2023)
-   - Clean labeling, ideal for baseline interpretability
-   - 3-class: bullish / neutral / bearish → positive / neutral / negative
-
-2. **Financial Tweets Sentiment** (TimKoornstra, 2023)
-   - Large-scale aggregated dataset
-   - Excellent for large-scale training + noisy label analysis
-   - 3-class: bullish / neutral / bearish → positive / neutral / negative
-
-3. **TweetFinSent** (JP Morgan, 2022)
-   - Expert annotated (positive/neutral/negative as "stock price sentiment")
-   - Small but very high-quality
-   - Ideal for label quality analysis
-
-**Why these datasets?**
-- All from Twitter (real social-media platform)
-- Post-2020 data (modern language patterns)
-- 3-class format (positive/neutral/negative)
-- Real social-media noise (hashtags, mentions, cashtags, abbreviations)
-- Different quality levels enable comprehensive label quality analysis
-
-### Quick Start: Download Datasets
-
-**Automated download (recommended):**
 ```bash
-# Install datasets library if needed
-pip install datasets requests
-
-# Download all modern datasets
-python src/download_modern_datasets.py --all
-
-# Or download individually
-python src/download_modern_datasets.py --dataset twitter_financial
-python src/download_modern_datasets.py --dataset financial_tweets_2023
-python src/download_modern_datasets.py --dataset tweetfinsent
-```
-
-**Manual download:**
-See `data/DATASET_RECOMMENDATIONS.md` for detailed download links and instructions.
-
-**Note**: If you already have `twitter_financial_train.csv` in the `data/` directory, you can use it directly.
-
-## Usage
-
-### Training
-
-Train a model using the command-line script:
-
-**Primary datasets** (recommended):
-```bash
-# Train on Twitter Financial News Sentiment
 python src/train.py \
     --data_path data/twitter_financial_train.csv \
     --dataset_name twitter_financial \
-    --test_size 0.2 \
     --max_features 10000
-
-# Train on Financial Tweets 2023
-python src/train.py \
-    --data_path data/financial_tweets_2023.csv \
-    --dataset_name financial_tweets_2023 \
-    --test_size 0.2
-
-# Train on TweetFinSent
-python src/train.py \
-    --data_path data/tweetfinsent.csv \
-    --dataset_name tweetfinsent \
-    --test_size 0.2
 ```
 
-Or use the Jupyter notebook:
-```bash
-jupyter notebook notebooks/02_train_baseline_modern.ipynb
-```
+This will:
+- Load and preprocess the dataset
+- Train TF-IDF + Logistic Regression model
+- Save model to `results/model.joblib`
+- Generate confusion matrix plot
 
-### Evaluation
-
-Evaluate a trained model:
+### 2. Evaluate Model
 
 ```bash
 python src/evaluate.py \
     --model_path results/model.joblib \
     --data_path data/twitter_financial_train.csv \
-    --dataset_name twitter_financial \
-    --output_dir results
+    --dataset_name twitter_financial
 ```
 
-### Label Quality Analysis
+This will:
+- Load trained model
+- Evaluate on dataset
+- Print classification report and confusion matrix
+- Show top features by class
+- Save detailed results to `results/evaluation_results.csv`
 
-Run label quality analysis to detect misclassifications, ambiguous predictions, and noisy labels:
+### 3. Label Quality Analysis
 
 ```bash
 python src/label_quality.py \
@@ -189,155 +114,130 @@ python src/label_quality.py \
     --output_dir results
 ```
 
-This will generate multiple CSV reports:
-- `misclassifications.csv`: Examples where predictions don't match true labels
-- `ambiguous_predictions.csv`: Low-confidence predictions (confidence between 0.45-0.55)
-- `noisy_labels.csv`: Potentially noisy labels based on heuristics
-- `neutral_ambiguous_zone.csv`: Cases where model struggles to distinguish neutral from sentiment
-- `borderline_cases.csv`: Borderline positive/negative vs neutral cases
-- `dataset_ambiguity_metrics.csv`: Dataset-inherent ambiguity metrics
+This will generate:
+- `misclassifications.csv`: Cases where model disagrees with labels
+- `ambiguous_predictions.csv`: Low-confidence predictions (0.45-0.55)
+- `noisy_labels.csv`: Potentially mislabeled examples
+- `neutral_ambiguous_zone.csv`: Cases where neutral vs sentiment is ambiguous
+- `borderline_cases.csv`: Borderline positive/negative vs neutral
+- `dataset_ambiguity_metrics.csv`: Overall ambiguity metrics
 
-### Dataset Comparison
+## Directory Structure
 
-Run the dataset comparison notebook to analyze differences between the three modern datasets:
-```bash
-jupyter notebook notebooks/03_dataset_comparison.ipynb
+```
+financial-sentiment-project/
+├── data/                    # Dataset files (not included in repo)
+│   └── twitter_financial_train.csv
+├── src/                     # Source code
+│   ├── preprocess.py        # Text preprocessing (URLs, hashtags, mentions)
+│   ├── dataset_loader.py    # Twitter dataset loader
+│   ├── model.py            # TF-IDF + Logistic Regression model
+│   ├── train.py            # Training script
+│   ├── evaluate.py         # Evaluation script
+│   └── label_quality.py    # Label quality analysis
+├── notebooks/              # Jupyter notebooks
+│   ├── 01_eda.ipynb        # Exploratory data analysis
+│   ├── 02_train_baseline.ipynb    # Model training
+│   ├── 03_label_quality.ipynb    # Label quality analysis
+│   └── 04_final_report.ipynb      # Complete project report
+├── tests/                  # Unit tests
+│   ├── test_preprocess.py
+│   ├── test_model.py
+│   └── test_label_quality.py
+├── results/                # Output directory (models, plots, reports)
+├── README.md
+├── HOW_TO_RUN.md           # Detailed usage guide
+├── HOW_TO_PRESENT.md       # Presentation guide
+├── PRESENTATION.md         # Presentation content
+├── FINAL_REPORT.md         # Complete project report
+├── COLAB_SETUP.md          # Google Colab setup
+├── requirements.txt
+└── .gitignore
 ```
 
-### Running Tests
+## Methodology
 
-Run the test suite:
+### Preprocessing
 
-```bash
-# Run all tests
-python -m pytest tests/
+Text preprocessing optimized for social media:
+- Remove URLs, cashtags, hashtags, @mentions
+- Lowercase conversion
+- Remove punctuation
+- Tokenization
 
-# Run specific test file
-python -m pytest tests/test_preprocess.py
-python -m pytest tests/test_model.py
-python -m pytest tests/test_label_quality.py
-```
+### Model
 
-Or using unittest:
+- **Feature Extraction**: TF-IDF with 1-2 gram features (max 10,000 features)
+- **Classifier**: Multinomial Logistic Regression
+- **Interpretability**: Feature weights show which words contribute to each sentiment class
 
-```bash
-python -m unittest discover tests/
-```
+**Note**: This is a **baseline model** using lightweight NLP. For stronger performance, consider contextual embeddings (e.g., FinBERT) as a future upper bound.
 
-## Module Documentation
+### Label Quality Evaluation
 
-### preprocess.py
+Comprehensive analysis designed for noisy social-media text:
 
-Text preprocessing functions:
-- `clean_text(text: str) -> str`: Clean a single text string
-- `preprocess_batch(texts)`: Preprocess a batch of texts
+1. **Misclassifications**: Model predictions that disagree with labels
+2. **Ambiguous Predictions**: Low-confidence predictions (0.45-0.55 probability)
+3. **Noisy Labels**: High-confidence disagreements or suspicious patterns
+4. **Neutral Ambiguous Zone**: Cases where model struggles with neutral vs sentiment
+5. **Borderline Cases**: Positive/negative vs neutral boundary cases
+6. **Dataset Ambiguity Metrics**: Overall ambiguity quantification
 
-Removes URLs, cashtags ($TSLA), hashtags, @mentions, converts to lowercase, removes punctuation, and tokenizes.
+## Usage Examples
 
-### dataset_loader.py
+### Using Jupyter Notebooks
 
-**Primary dataset loaders**:
-- `load_twitter_financial(file_path)`: Load Twitter Financial News Sentiment (Zeroshot, 2023)
-- `load_financial_tweets_2023(file_path)`: Load Financial Tweets Sentiment (TimKoornstra, 2023)
-- `load_tweetfinsent(file_path)`: Load TweetFinSent (JP Morgan, 2022)
-- `load_dataset(dataset_name, file_path)`: Unified loader
+1. **EDA**: `notebooks/01_eda.ipynb` - Explore dataset characteristics
+2. **Training**: `notebooks/02_train_baseline.ipynb` - Train and evaluate model
+3. **Label Quality**: `notebooks/03_label_quality.ipynb` - Comprehensive label quality analysis
+4. **Final Report**: `notebooks/04_final_report.ipynb` - Complete project report
 
-All loaders return a pandas DataFrame with 'text' and 'label' columns, with labels unified to: **positive, neutral, negative**.
+### Using Command-Line Scripts
 
-**Legacy loaders** (deprecated):
-- `load_phrasebank()`, `load_semeval()`, `load_sentfin()` - marked as legacy
-
-### model.py
-
-Model building functions:
-- `build_model(max_features, ngram_range)`: Build TF-IDF + Logistic Regression pipeline
-- `get_top_features(pipeline, class_name, top_n)`: Get top features for a class
-- `get_all_top_features(pipeline, top_n)`: Get top features for all classes
-
-### train.py
-
-Training script that:
-- Loads and preprocesses data
-- Splits into train/test sets
-- Trains the model
-- Saves model and confusion matrix
-- Generates training summary
-
-### evaluate.py
-
-Evaluation script that:
-- Loads a trained model
-- Evaluates on test data
-- Prints classification report and confusion matrix
-- Shows top features for each class
-- Saves detailed results to CSV
-
-### label_quality.py
-
-Label quality analysis functions:
-- `detect_misclassifications()`: Find misclassified examples
-- `detect_ambiguous_predictions()`: Find low-confidence predictions
-- `detect_noisy_labels()`: Find potentially noisy labels using heuristics
-- `analyze_neutral_ambiguous_zone()`: Analyze neutral ambiguous zone (social-media specific)
-- `analyze_borderline_cases()`: Analyze borderline positive/negative vs neutral cases
-- `quantify_dataset_ambiguity()`: Quantify dataset-inherent ambiguity metrics
-- `run_label_quality_analysis()`: Run complete analysis with social-media-specific metrics
+See [HOW_TO_RUN.md](HOW_TO_RUN.md) for detailed usage examples.
 
 ## Results
 
-All outputs are saved to the `results/` directory:
+After training and evaluation, results are saved to `results/`:
 - `model.joblib`: Trained model
 - `confusion_matrix.png`: Confusion matrix visualization
-- `training_summary.txt`: Training metrics
 - `evaluation_results.csv`: Detailed predictions
-- `evaluation_summary.txt`: Evaluation metrics
-- `misclassifications.csv`: Misclassified examples
-- `ambiguous_predictions.csv`: Ambiguous predictions
-- `noisy_labels.csv`: Potentially noisy labels
-- `neutral_ambiguous_zone.csv`: Neutral ambiguous zone cases
-- `borderline_cases.csv`: Borderline cases
-- `dataset_ambiguity_metrics.csv`: Dataset ambiguity metrics
+- Label quality CSV reports (see above)
 
-## Requirements
+## Key Features
 
-- Python 3.7+
-- pandas
-- numpy
-- scikit-learn
-- nltk
-- matplotlib
-- seaborn
-- joblib
-- jupyter
-- datasets (for downloading from HuggingFace)
-- requests (for downloading from GitHub)
+- **Social-media optimized**: Preprocessing handles Twitter-specific noise
+- **Interpretable**: Feature weights show model decisions
+- **Label quality focus**: Comprehensive analysis of dataset quality
+- **Academic alignment**: Matches CS5100 research proposal requirements
+- **Clean codebase**: Modular, well-documented, tested
 
-See `requirements.txt` for specific versions.
+## Limitations
 
-## Why Modern Social-Media Datasets?
+- **Bag-of-words representation**: TF-IDF ignores word order and long-range context
+- **Social-media ambiguity**: Social-media text is inherently ambiguous (sarcasm, missing context, abbreviations), making some cases difficult even for humans
+- **Short text challenge**: The model may struggle with very short or highly informal social-media posts
+- **Baseline model**: TF-IDF + Logistic Regression is a lightweight baseline; **cannot capture sarcasm or long-range dependencies**
+- **No deep learning**: By design, we use lightweight NLP for interpretability, but this limits model capacity
 
-**Why we use post-2020 Twitter datasets:**
-- **Social-media source**: Direct Twitter data (not news headlines)
-- **Recent data**: Post-2020 reflects current social-media language patterns
-- **3-class format**: All support positive/neutral/negative classification
-- **Noise characteristics**: Real social-media noise (hashtags, mentions, cashtags, abbreviations)
-- **Label quality research**: Different quality levels enable comprehensive label quality analysis
-- **Interpretability**: Clean labels support TF-IDF + Logistic Regression baseline analysis
+**Future improvements**: Consider FinBERT or other contextual embeddings for stronger performance, especially for capturing sarcasm and long-range dependencies.
 
-**How they enable better label quality analysis:**
-- **Ambiguity analysis**: Different quality levels reveal different ambiguity patterns
-- **Noisy label detection**: Large-scale and high-quality datasets provide comprehensive coverage
-- **Low-confidence cases**: Social-media noise creates natural low-confidence scenarios
+## Future Work
 
-## Alignment with CS5100 Proposal
+- Replace TF-IDF with contextual embeddings (e.g., BERT or FinBERT)
+- Incorporate additional features (cashtags, hashtags, user metadata)
+- Active learning for ambiguous/noisy cases
+- Real-time API deployment
 
-This project perfectly matches the CS5100 research proposal by:
-1. Focusing on **financial social-media sentiment** (not news articles)
-2. Using **lightweight NLP** (TF-IDF + Logistic Regression baseline)
-3. Providing **interpretability** via feature weights
-4. Conducting **comprehensive label quality evaluation** in noisy social-media text
+## Citation
 
-See `PROPOSAL_CONSISTENCY_CHECK.md` for detailed alignment analysis.
+If you use this project, please cite:
+
+```
+Financial Social-Media Sentiment Classification with Label Quality Evaluation
+CS5100 Final Project
+```
 
 ## License
 
