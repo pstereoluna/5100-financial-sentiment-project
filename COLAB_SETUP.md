@@ -87,9 +87,9 @@ sys.path.insert(0, os.path.join(PROJECT_ROOT, 'src'))
 
 ```python
 # Colab中，数据可能在/content/或/content/drive/MyDrive/
-DATA_PATH = '/content/financial-sentiment-project/data/SEntFiN.csv'
+DATA_PATH = '/content/financial-sentiment-project/data/twitter_financial_train.csv'
 # 或
-DATA_PATH = '/content/drive/MyDrive/SEntFiN.csv'
+DATA_PATH = '/content/drive/MyDrive/twitter_financial_train.csv'
 ```
 
 ### 3. 结果保存
@@ -209,8 +209,8 @@ for filename in uploaded.keys():
 
 ```python
 # 配置
-DATA_PATH = 'data/SEntFiN.csv'  # 或你上传的文件名
-DATASET_NAME = 'sentfin'
+DATA_PATH = 'data/twitter_financial_train.csv'  # 或你上传的文件名
+DATASET_NAME = 'twitter_financial'  # 'twitter_financial', 'financial_tweets_2023', or 'tweetfinsent'
 RESULTS_DIR = 'results'
 
 # 运行训练（使用命令行或直接调用函数）
@@ -253,8 +253,8 @@ RESULTS_DIR = '/content/drive/MyDrive/financial-sentiment-results'
 
 # 训练时指定路径
 !python src/train.py \
-    --data_path data/SEntFiN.csv \
-    --dataset_name sentfin \
+    --data_path data/twitter_financial_train.csv \
+    --dataset_name twitter_financial \
     --model_path {RESULTS_DIR}/model.joblib
 ```
 
@@ -310,7 +310,7 @@ print("当前目录:", os.getcwd())
 print("文件列表:", os.listdir('.'))
 
 # 使用绝对路径
-DATA_PATH = '/content/financial-sentiment-project/data/SEntFiN.csv'
+DATA_PATH = '/content/financial-sentiment-project/data/twitter_financial_train.csv'
 ```
 
 ### Q3: Colab会话断开后文件丢失？
@@ -422,4 +422,7 @@ else:
 ---
 
 **需要帮助？** 查看主README.md获取更多信息。
+
+
+
 

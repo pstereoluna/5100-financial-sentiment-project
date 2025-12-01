@@ -138,8 +138,8 @@ All visualizations are saved in the `results/` directory:
 - **Pipeline**: sklearn Pipeline for end-to-end processing
 
 ### Dataset
-- **Name**: SEntFiN 1.0
-- **Size**: 10,753 samples
+- **Name**: Twitter Financial News Sentiment (Zeroshot, 2023) or other modern social-media dataset
+- **Size**: [Update with actual size]
 - **Labels**: Positive, Neutral, Negative
 
 ### Evaluation

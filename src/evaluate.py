@@ -19,7 +19,7 @@ from src.preprocess import preprocess_batch
 def evaluate_model(
     model_path: str,
     data_path: str,
-    dataset_name: str = 'phrasebank',
+    dataset_name: str = 'twitter_financial',
     output_dir: str = 'results'
 ):
     """
@@ -129,9 +129,9 @@ if __name__ == '__main__':
                         help='Path to saved model file')
     parser.add_argument('--data_path', type=str, required=True,
                         help='Path to test dataset file')
-    parser.add_argument('--dataset_name', type=str, default='phrasebank',
-                        choices=['phrasebank', 'semeval', 'sentfin'],
-                        help='Dataset name')
+    parser.add_argument('--dataset_name', type=str, default='twitter_financial',
+                        choices=['twitter_financial', 'financial_tweets_2023', 'tweetfinsent', 'phrasebank', 'semeval', 'sentfin'],
+                        help='Dataset name (primary: twitter_financial, financial_tweets_2023, tweetfinsent; legacy: phrasebank, semeval, sentfin)')
     parser.add_argument('--output_dir', type=str, default='results',
                         help='Directory to save evaluation results')
     

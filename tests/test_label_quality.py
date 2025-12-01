@@ -62,7 +62,7 @@ class TestLabelQuality(unittest.TestCase):
         ambiguous_df = detect_ambiguous_predictions(
             model_path=self.model_path,
             data_path=self.data_path,
-            dataset_name='phrasebank',
+            dataset_name='twitter_financial',
             confidence_threshold=(0.45, 0.55),
             output_path=os.path.join(self.temp_dir, 'ambiguous.csv')
         )
@@ -85,7 +85,7 @@ class TestLabelQuality(unittest.TestCase):
         detect_ambiguous_predictions(
             model_path=self.model_path,
             data_path=self.data_path,
-            dataset_name='phrasebank',
+            dataset_name='twitter_financial',
             output_path=output_path
         )
         

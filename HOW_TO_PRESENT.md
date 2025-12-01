@@ -6,7 +6,7 @@ This guide shows you multiple ways to create a presentation from your project re
 
 ### Step 1: Configure Notebook for Slides
 
-1. Open your notebook: `notebooks/03_full_pipeline_report.ipynb`
+1. Open your notebook: `notebooks/02_train_baseline_modern.ipynb` or `notebooks/03_label_quality_modern.ipynb`
 2. In Jupyter, go to **View → Cell Toolbar → Slideshow**
 3. Set each cell's slide type:
    - **Slide**: Main content slides
@@ -230,7 +230,7 @@ xdg-open results/confusion_matrix.png  # Linux
    - Project goal
 
 2. **Dataset & Methodology** (3 min)
-   - SEntFiN dataset overview
+   - Modern Twitter datasets overview (Twitter Financial, Financial Tweets 2023, TweetFinSent)
    - Preprocessing steps
    - Model architecture
 
