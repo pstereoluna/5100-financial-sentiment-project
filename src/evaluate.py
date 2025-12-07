@@ -7,10 +7,6 @@ import numpy as np
 import joblib
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 import os
-import sys
-
-# Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.model import get_all_top_features
 from src.preprocess import preprocess_batch

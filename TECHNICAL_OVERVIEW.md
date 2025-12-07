@@ -70,8 +70,7 @@
 4. **小写转换**：将所有文本转换为小写
 5. **标点移除**：移除标点符号
 6. **分词**：将文本分割为词元（如果可用则使用 NLTK，否则使用简单分割）
-7. **停用词移除**：移除英文停用词（如果 NLTK 可用）
-8. **重新连接**：将词元重新连接为清理后的文本字符串
+7. **重新连接**：将词元重新连接为清理后的文本字符串
 
 **实现细节**：
 - 使用正则表达式进行模式匹配（URL、股票代码、标签、提及）
@@ -161,19 +160,22 @@ Pipeline([
 
 ### 4.1 训练过程
 
-**训练/测试划分**：
-- **划分比例**：80/20（训练/测试）
-- **分层**：是（在两个划分中保留标签分布）
-- **随机种子**：`42`（用于可重现性）
+**数据划分**：
+- **训练集**：`twitter_financial_train.csv`（~9,500 样本）- 仅用于训练
+- **验证集**：`twitter_financial_valid.csv`（~2,400 样本）- 完全独立的测试集
+
+使用独立的验证集（而不是从训练数据中随机划分）确保了无偏的评估和更准确的性能估计。
 
 **训练步骤**（来自 `src/train.py`）：
-1. 使用 `load_dataset('twitter_financial', data_path)` 加载数据集
-2. 使用 `preprocess_batch()` 预处理文本
+1. 使用 `load_dataset('twitter_financial', train_path)` 加载训练数据集
+2. 使用 `preprocess_batch()` 预处理训练文本
 3. 过滤空文本
-4. 划分为训练/测试集
-5. 使用 `build_model(max_features=10000, ngram_range=(1, 2))` 构建模型
-6. 训练模型：`model.fit(X_train, y_train)`
-7. 保存模型：`joblib.dump(model, 'results/model.joblib')`
+4. 使用 `load_dataset('twitter_financial', valid_path)` 加载独立验证集
+5. 预处理验证集文本
+6. 使用 `build_model(max_features=10000, ngram_range=(1, 2))` 构建模型
+7. 训练模型：`model.fit(X_train, y_train)`（仅使用训练集）
+8. 在独立验证集上评估：`model.predict(X_valid)`
+9. 保存模型：`joblib.dump(model, 'results/model.joblib')`
 
 **模型保存**：
 - 保存到 `results/model.joblib`（或在报告 notebook 中为 `results/model_report.joblib`）
@@ -413,10 +415,10 @@ Pipeline([
 
 **关键发现**：
 - 社交媒体文本比新闻文章具有更高的模糊性
-- 中性类别特别具有挑战性（低召回率：0.36）
-- 类别不平衡影响模型在少数类上的性能
+- 中性类别表现最好（召回率：0.85），因为它是多数类（~65%）
+- 类别不平衡影响模型在少数类上的性能，负面类别（15%）最具挑战性
 - 对于噪声文本，标签质量比准确率更重要
-- 25% 的预测具有低置信度，表明数据集固有的模糊性
+- 使用独立验证集（而非从训练数据中随机划分）确保了无偏的评估和更准确的性能估计
 
 ---
 
@@ -463,10 +465,10 @@ Pipeline([
 
 要重现结果：
 
-1. **下载数据集**：将 `twitter_financial_train.csv` 放在 `data/` 目录中
+1. **下载数据集**：将 `twitter_financial_train.csv` 和 `twitter_financial_valid.csv` 放在 `data/` 目录中
 2. **安装依赖**：`pip install -r requirements.txt`
-3. **训练模型**：`python src/train.py --data_path data/twitter_financial_train.csv --dataset_name twitter_financial`
-4. **评估**：`python src/evaluate.py --model_path results/model.joblib --data_path data/twitter_financial_train.csv --dataset_name twitter_financial`
+3. **训练模型**：`python src/train.py --data_path data/twitter_financial_train.csv --valid_path data/twitter_financial_valid.csv --dataset_name twitter_financial`
+4. **评估**：`python src/evaluate.py --model_path results/model.joblib --data_path data/twitter_financial_valid.csv --dataset_name twitter_financial`
 5. **标签质量**：`python src/label_quality.py --model_path results/model.joblib --data_path data/twitter_financial_train.csv --dataset_name twitter_financial`
 
 或使用 Jupyter notebooks 进行交互式分析。

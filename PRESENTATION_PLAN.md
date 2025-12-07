@@ -46,10 +46,10 @@
 
 **Slide 4 (Results Overview) - ~50 seconds**
 - "Thank you, [Person A]. Let me present our results."
-- "Our model achieved an accuracy of approximately 78% and a macro F1-score of 0.66 on a test set of about 1,900 samples."
+- "Our model achieved an accuracy of approximately 80% and a macro F1-score of 0.74 on an independent validation set of 2,383 samples."
 - "Looking at per-class performance, the neutral class is the dominant class at approximately 65% of the dataset."
 - "The positive class represents about 20% of the data, and the negative class is the minority at about 15%."
-- "The key finding here is that minority classes (positive and negative) are more challenging to classify due to class imbalance."
+- "The key finding here is that minority classes, especially the negative class, are more challenging to classify due to class imbalance."
 
 **Slide 5 (Confusion Matrix Insights) - ~40 seconds**
 - "The confusion matrix reveals several important patterns."
@@ -67,9 +67,9 @@
 
 **Slide 7 (Label Quality Analysis) - ~50 seconds**
 - "Now, let me present our main research contribution: comprehensive label quality evaluation."
-- "We identified 1,414 misclassifications, representing 14.84% of the dataset. We also found 1,262 ambiguous predictions, or 13.25% of cases."
-- "Additionally, we detected 1,319 potentially noisy labels, 726 cases in the neutral ambiguous zone, and 1,172 borderline cases."
-- "The key finding is that 25% of predictions have low confidence, indicating dataset-inherent ambiguity in social-media text."
+- "We performed label quality analysis on our independent validation set to identify misclassifications, ambiguous predictions, and potentially noisy labels."
+- "The analysis reveals patterns in dataset ambiguity, including cases in the neutral ambiguous zone and borderline cases between classes."
+- "A significant portion of predictions have low confidence, indicating dataset-inherent ambiguity in social-media text."
 - "This label quality framework provides insights into dataset reliability and annotation inconsistencies, which is more valuable than raw accuracy metrics alone."
 - **Transition**: "Now I'll hand it off to [Person C] to discuss limitations and conclusions."
 
@@ -95,7 +95,7 @@
 
 **Slide 9 (Conclusion) - ~60 seconds**
 - "In conclusion, we built a complete ML pipeline for financial social-media sentiment classification."
-- "We achieved solid performance with 78% accuracy and 0.66 macro F1-score, while providing an interpretable model through feature weights."
+- "We achieved solid baseline performance with 80% accuracy and 0.74 macro F1-score on an independent validation set, while providing an interpretable model through feature weights."
 - "Our main research contribution is the label quality evaluation framework for noisy social-media text."
 - "The key takeaway is that label quality evaluation provides more insights than raw accuracy metrics alone, especially for noisy social-media text like Twitter posts."
 - "This work aligns perfectly with our CS5100 proposal, focusing on financial social-media sentiment with comprehensive label quality evaluation."

@@ -50,9 +50,9 @@
 
 ### Performance Metrics
 
-- **Accuracy**: ~78%
-- **Macro F1**: ~0.66
-- **Test set**: ~1,900 samples
+- **Accuracy**: ~80%
+- **Macro F1**: ~0.74
+- **Validation set**: 2,383 samples (independent hold-out)
 
 **Per-Class Performance**
 - **Neutral**: High recall - dominant class (~65%)
@@ -68,9 +68,9 @@
 [Include confusion matrix visualization]
 
 **Observations**
-- Negative: High accuracy (dominant class)
-- Neutral: Many misclassified as negative/positive
-- Positive: Some confusion with negative
+- Neutral: High accuracy - dominant class (~65%)
+- Negative: Lower accuracy - minority class (~15%), most challenging
+- Positive: Moderate accuracy (~20%)
 
 **Class Imbalance Impact**: 4.3:1 ratio (neutral to negative) affects minority class performance
 
@@ -80,11 +80,11 @@
 
 ### Feature Weights by Class
 
-**Positive**: "beats", "bullish", "rises", "higher", "strong", "gain"
+**Positive**: "bullish", "beats", "rises", "higher", "strong", "positive"
 
-**Negative**: "declares", "fed", "loss", "misses", "downgraded", "falls"
+**Negative**: "downgraded", "lower", "misses", "falls", "cuts", "target cut"
 
-**Neutral**: "lower", "downgraded", "misses", "cuts", "target cut"
+**Neutral**: "declares", "reports", "conference", "presentation", "results", "fed"
 
 **Insight**: Feature weights align with financial sentiment patterns
 
@@ -130,7 +130,7 @@
 ### Summary
 
 - Built ML pipeline for financial social-media sentiment classification
-- Achieved solid performance (accuracy: ~78%, macro F1: ~0.66)
+- Achieved solid baseline performance (accuracy: ~80%, macro F1: ~0.74) on independent validation set
 - Provided interpretable model via feature weights
 - **Main Contribution**: Label quality evaluation framework for noisy social-media text
 

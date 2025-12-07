@@ -9,10 +9,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, classification_report
 import os
-import sys
-
-# Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.model import build_model
 from src.preprocess import preprocess_batch

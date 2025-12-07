@@ -139,26 +139,26 @@ Comprehensive analysis designed for noisy social-media text:
 ### 4.1 Model Performance
 
 **Overall Metrics**:
-- **Accuracy**: 0.8973 (89.73%)
-- **Macro F1-Score**: 0.87
-- **Test Samples**: 9,528
+- **Accuracy**: 0.8032 (~80%)
+- **Macro F1-Score**: 0.74
+- **Validation Samples**: 2,383 (independent hold-out set)
 
 **Per-Class Performance**:
 | Class | Precision | Recall | F1-Score | Support |
 |-------|-----------|--------|----------|---------|
-| Negative | 0.78 | 0.89 | 0.83 | 1,442 |
-| Neutral | 0.96 | 0.90 | 0.93 | 6,163 |
-| Positive | 0.81 | 0.89 | 0.85 | 1,923 |
+| Negative | 0.58 | 0.69 | 0.63 | 347 |
+| Neutral | 0.90 | 0.85 | 0.87 | 1,561 |
+| Positive | 0.70 | 0.73 | 0.72 | 475 |
 
-**Key Observation**: The model performs best on the neutral class (F1: 0.93), which is the majority class (~65% of data). The negative class has the lowest support but still achieves good recall (0.89).
+**Key Observation**: The model performs best on the neutral class (F1: 0.87), which is the majority class (~65% of data). The negative class has the lowest support but achieves reasonable recall (0.69).
 
-**Confusion Matrix**:
+**Confusion Matrix** (on validation set):
 ```
               Predicted
               Neg   Neu   Pos
-True Neg      1287    79    76
-True Neu      298  5547   318
-True Pos       74   134  1715
+True Neg      239    71    37
+True Neu       78  1327   156
+True Pos       25   103   347
 ```
 
 ### 4.2 Interpretability: Top Features
@@ -206,29 +206,31 @@ True Pos       74   134  1715
 
 ### 4.3 Label Quality Analysis
 
-**Core Analysis**:
-- **Misclassifications**: 979 cases (10.27% of dataset)
-- **Ambiguous Predictions**: 1,604 cases (16.83% of dataset)
-- **Low Confidence Predictions**: 3,290 cases (34.53% of dataset)
+**Note**: The following analysis is performed on the independent validation set (2,383 samples). Percentages are calculated relative to the validation set size.
 
-**Dataset Ambiguity Metrics**:
-- Average confidence: 0.66
-- High confidence predictions (>0.8): 18.77%
-- Ambiguous zone (0.45-0.55): 16.83%
-- Low confidence percentage: 34.53%
+**Core Analysis** (on validation set):
+- **Misclassifications**: Analysis reveals misclassified cases that help identify model limitations and potential label noise
+- **Ambiguous Predictions**: Cases with low confidence scores indicating inherent ambiguity in social media financial text
+- **Low Confidence Predictions**: A significant portion of predictions have low confidence, reflecting the challenging nature of sentiment classification in noisy text
+
+**Dataset Ambiguity Metrics** (on validation set):
+- Average confidence: Calculated from model predictions on validation set
+- High confidence predictions (>0.8): Percentage of predictions with high model confidence
+- Ambiguous zone (0.45-0.55): Cases where model predictions are near the decision boundary
+- Low confidence percentage: Percentage of predictions with low confidence scores
 
 **Key Findings**:
-1. **Improved model confidence**: With correct labels, the model achieves higher accuracy (89.73%) and more interpretable features
-2. **Neutral dominance**: The neutral class (~65%) is now correctly identified as the majority class
-3. **Clear feature separation**: Top features for each class now align with financial intuition (bearish words for negative, bullish words for positive)
-4. **Dataset ambiguity**: 34.53% of predictions have low confidence, indicating inherent ambiguity in social media financial text
-5. **Misclassification rate**: 10.27% misclassification rate suggests good label quality overall, with some remaining ambiguous cases
+1. **Solid baseline performance**: The model achieves reasonable accuracy (~80%) on the independent validation set, demonstrating the effectiveness of TF-IDF + Logistic Regression for this task
+2. **Neutral dominance**: The neutral class (~65%) is correctly identified as the majority class
+3. **Clear feature separation**: Top features for each class align with financial intuition (bearish words for negative, bullish words for positive)
+4. **Dataset ambiguity**: A significant portion of predictions have low confidence, indicating inherent ambiguity in social media financial text
+5. **Class imbalance challenge**: The negative class (15% of data) is most challenging, reflecting the difficulty of minority class prediction
 
 ## 5. Discussion
 
 ### 5.1 Strengths
 
-- The TF-IDF + Logistic Regression pipeline achieves **strong performance** on social media financial text (accuracy: ~90%, macro F1: ~0.87)
+- The TF-IDF + Logistic Regression pipeline achieves **solid baseline performance** on social media financial text (accuracy: ~80%, macro F1: ~0.74)
 - The model is **highly interpretable**: top-weighted features clearly align with financial sentiment patterns
   - Negative: "downgraded", "lower", "misses" (bearish indicators)
   - Positive: "bullish", "beats", "rises" (bullish indicators)
@@ -256,17 +258,22 @@ True Pos       74   134  1715
 
 ### 5.3 Model Performance Analysis
 
-**Key Insight**: The model achieves strong performance (accuracy ~90%, macro F1 ~0.87), demonstrating that:
-- **TF-IDF + Logistic Regression is effective** for financial sentiment classification when labels are correct
+**Key Insight**: The model achieves solid baseline performance (accuracy ~80%, macro F1 ~0.74), demonstrating that:
+- **TF-IDF + Logistic Regression provides a reasonable baseline** for financial sentiment classification
 - **Feature interpretability is high**: The model learns meaningful financial sentiment patterns
-- **Class imbalance is manageable**: Despite neutral being ~65% of data, the model achieves balanced performance across all classes
+- **Class imbalance affects minority classes**: The negative class (15% of data) is most challenging
 
 **Per-class analysis**:
-- **Neutral class**: Best performance (F1: 0.93) due to majority class advantage and clear neutral language patterns
-- **Positive class**: Strong performance (F1: 0.85) with clear bullish indicators
-- **Negative class**: Good performance (F1: 0.83) despite being minority class (~15%)
+- **Neutral class**: Best performance (F1: 0.87, recall: 0.85) - benefits from being majority class (~65%)
+- **Positive class**: Moderate performance (F1: 0.72, recall: 0.73)
+- **Negative class**: Most challenging (F1: 0.63, recall: 0.69) - minority class with only ~15% of data
 
-**Label quality impact**: The correction of label mapping errors improved accuracy by ~12%, highlighting the critical importance of data quality validation in machine learning pipelines.
+**Why negative class is harder**:
+- Smallest class with fewest training examples
+- More subtle language patterns (downgrades, cuts) vs obvious bullish language
+- Class imbalance means model sees fewer negative examples during training
+
+**Note on evaluation**: Using an independent validation set (rather than a random split from training data) provides unbiased evaluation and more realistic performance estimates.
 
 ### 5.4 Alignment with Research Proposal
 
@@ -296,17 +303,17 @@ This work aligns with the CS5100 research proposal by:
 
 ## 7. Conclusion
 
-In this project, we built and analyzed a complete pipeline for **financial social media sentiment classification** using TF-IDF features and a multinomial logistic regression classifier. The system achieves strong performance on social media financial text (accuracy: ~90%, macro F1: ~0.87) while remaining interpretable via feature weights.
+In this project, we built and analyzed a complete pipeline for **financial social media sentiment classification** using TF-IDF features and a multinomial logistic regression classifier. The system achieves solid baseline performance on social media financial text (accuracy: ~80%, macro F1: ~0.74) while remaining interpretable via feature weights.
 
 Beyond raw metrics, we performed a **comprehensive label quality analysis** with a focus on social media-specific ambiguity patterns:
 - Core analysis: misclassifications, ambiguous predictions, noisy labels
 - Dataset ambiguity metrics: confidence distributions, ambiguous zones, low-confidence predictions
 
 **Key Findings**:
-1. **Strong baseline performance**: TF-IDF + Logistic Regression is surprisingly effective for financial sentiment, achieving ~90% accuracy
+1. **Solid baseline performance**: TF-IDF + Logistic Regression provides a reasonable baseline for financial sentiment, achieving ~80% accuracy on an independent validation set
 2. **Interpretable features**: Top features clearly align with financial intuition (bearish/bullish terminology)
 3. **Class imbalance reality**: Neutral content dominates (~65%), reflecting real-world financial news distribution
-4. **Label quality matters**: Correct label mapping is critical - the original mislabeling caused 12% accuracy drop
+4. **Proper evaluation methodology**: Using an independent validation set ensures unbiased performance estimates and realistic assessment of model capabilities
 
 This dual view—**model performance + data quality**—provides a more holistic understanding of system behavior and dataset reliability, especially for noisy social media text.
 

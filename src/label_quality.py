@@ -21,10 +21,6 @@ import pandas as pd
 import numpy as np
 import joblib
 import os
-import sys
-
-# Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 def detect_misclassifications(
@@ -71,8 +67,12 @@ def detect_misclassifications(
         'true_label': y_true[misclassified],
         'predicted_label': y_pred[misclassified],
         'confidence': np.max(y_proba[misclassified], axis=1),
-        'true_label_prob': [y_proba[misclassified][i, np.where(model.named_steps['classifier'].classes_ == y_true[misclassified][i])[0][0]] 
-                           for i in range(np.sum(misclassified))]
+        'true_label_prob': [
+            y_proba[misclassified][i, np.where(model.named_steps['classifier'].classes_ == y_true[misclassified][i])[0][0]]
+            if len(np.where(model.named_steps['classifier'].classes_ == y_true[misclassified][i])[0]) > 0
+            else 0.0
+            for i in range(np.sum(misclassified))
+        ]
     })
     
     # Save to CSV
@@ -198,12 +198,28 @@ def detect_noisy_labels(
     
     # Heuristic 3: Low confidence on true label
     classes = model.named_steps['classifier'].classes_
-    true_label_probs = np.array([y_proba[i, np.where(classes == y_true[i])[0][0]] 
-                                 for i in range(len(y_true))])
+    true_label_probs = np.array([
+        y_proba[i, np.where(classes == y_true[i])[0][0]]
+        if len(np.where(classes == y_true[i])[0]) > 0
+        else 0.0
+        for i in range(len(y_true))
+    ])
     low_true_conf = true_label_probs < 0.4
     
     # Combine heuristics
     noisy_mask = high_conf_misclass | (short_texts & (y_true != y_pred)) | low_true_conf
+    
+    # Helper function to get all applicable heuristics
+    def get_heuristics(h, s, l):
+        """Return comma-separated string of all applicable heuristics."""
+        heuristics = []
+        if h:
+            heuristics.append('high_conf_misclass')
+        if s:
+            heuristics.append('short_text')
+        if l:
+            heuristics.append('low_true_conf')
+        return ','.join(heuristics) if heuristics else 'unknown'
     
     noisy_df = pd.DataFrame({
         'text': df['text'].values[noisy_mask],
@@ -213,10 +229,11 @@ def detect_noisy_labels(
         'confidence': max_proba[noisy_mask],
         'true_label_prob': true_label_probs[noisy_mask],
         'text_length': df['cleaned_text'].str.len().values[noisy_mask],
-        'heuristic': ['high_conf_misclass' if h else ('short_text' if s else 'low_true_conf')
-                     for h, s, l in zip(high_conf_misclass[noisy_mask], 
-                                       short_texts[noisy_mask],
-                                       low_true_conf[noisy_mask])]
+        'heuristic': [get_heuristics(h, s, l) for h, s, l in zip(
+            high_conf_misclass[noisy_mask], 
+            short_texts[noisy_mask],
+            low_true_conf[noisy_mask]
+        )]
     })
     
     # Save to CSV
@@ -268,7 +285,13 @@ def analyze_neutral_ambiguous_zone(
     y_proba = model.predict_proba(X)
     
     classes = model.named_steps['classifier'].classes_
-    neutral_idx = np.where(classes == 'neutral')[0][0]
+    neutral_indices = np.where(classes == 'neutral')[0]
+    
+    if len(neutral_indices) == 0:
+        print("Warning: 'neutral' class not found in model")
+        return pd.DataFrame()
+    
+    neutral_idx = neutral_indices[0]
     
     # Get neutral probabilities
     neutral_probs = y_proba[:, neutral_idx]
@@ -343,10 +366,14 @@ def analyze_borderline_cases(
     
     classes = model.named_steps['classifier'].classes_
     
-    # Find positive and negative indices
-    pos_idx = np.where(classes == 'positive')[0][0] if 'positive' in classes else None
-    neg_idx = np.where(classes == 'negative')[0][0] if 'negative' in classes else None
-    neu_idx = np.where(classes == 'neutral')[0][0] if 'neutral' in classes else None
+    # Find positive and negative indices with safety checks
+    pos_indices = np.where(classes == 'positive')[0]
+    neg_indices = np.where(classes == 'negative')[0]
+    neu_indices = np.where(classes == 'neutral')[0]
+    
+    pos_idx = pos_indices[0] if len(pos_indices) > 0 else None
+    neg_idx = neg_indices[0] if len(neg_indices) > 0 else None
+    neu_idx = neu_indices[0] if len(neu_indices) > 0 else None
     
     borderline_cases = []
     

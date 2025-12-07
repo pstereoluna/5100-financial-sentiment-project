@@ -37,6 +37,8 @@ This project aligns with the CS5100 research proposal focusing on:
 
 1. Download the dataset from [Hugging Face](https://huggingface.co/datasets/Zeroshot/twitter-financial-news-sentiment) or place your CSV file in `data/twitter_financial_train.csv`
 
+**Note**: The `data/` directory may contain other files (e.g., `SEntFiN.csv`). This project uses only the Twitter Financial News Sentiment dataset. Other files in `data/` are ignored by git (see `.gitignore`).
+
 2. Expected CSV format:
    ```csv
    text,label

@@ -47,7 +47,7 @@ def load_twitter_financial(file_path: str) -> pd.DataFrame:
     if file_ext == '.json':
         try:
             df = pd.read_json(file_path)
-        except:
+        except (ValueError, json.JSONDecodeError):
             # Try JSONL format
             with open(file_path, 'r') as f:
                 data = [json.loads(line) for line in f]

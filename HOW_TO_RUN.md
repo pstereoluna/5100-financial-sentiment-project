@@ -30,7 +30,8 @@ jupyter notebook notebooks/04_final_report.ipynb
 
 **Update the configuration at the top of each notebook:**
 ```python
-DATA_PATH = 'data/twitter_financial_train.csv'  # Your dataset path
+TRAIN_PATH = 'data/twitter_financial_train.csv'  # Training dataset path
+VALID_PATH = 'data/twitter_financial_valid.csv'  # Validation dataset path
 DATASET_NAME = 'twitter_financial'
 ```
 

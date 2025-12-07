@@ -7,6 +7,8 @@ by removing URLs, cashtags, hashtags, mentions, and normalizing text.
 
 import re
 import string
+from typing import Union, List
+import pandas as pd
 
 try:
     from nltk.tokenize import word_tokenize
@@ -70,7 +72,7 @@ def clean_text(text: str) -> str:
     return cleaned_text
 
 
-def preprocess_batch(texts):
+def preprocess_batch(texts: Union[List[str], pd.Series]) -> List[str]:
     """
     Preprocess a batch of texts.
     
