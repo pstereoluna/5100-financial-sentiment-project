@@ -78,28 +78,32 @@ See [COLAB_SETUP.md](COLAB_SETUP.md) for detailed Google Colab setup instruction
 ```bash
 python src/train.py \
     --data_path data/twitter_financial_train.csv \
+    --valid_path data/twitter_financial_valid.csv \
     --dataset_name twitter_financial \
     --max_features 10000
 ```
 
 This will:
-- Load and preprocess the dataset
+- Load and preprocess the training dataset (uses ALL training data, no split)
 - Train TF-IDF + Logistic Regression model
+- Evaluate on the independent validation set
 - Save model to `results/model.joblib`
 - Generate confusion matrix plot
+
+**Note**: The validation set is completely independent from training data, ensuring unbiased evaluation.
 
 ### 2. Evaluate Model
 
 ```bash
 python src/evaluate.py \
     --model_path results/model.joblib \
-    --data_path data/twitter_financial_train.csv \
+    --data_path data/twitter_financial_valid.csv \
     --dataset_name twitter_financial
 ```
 
 This will:
 - Load trained model
-- Evaluate on dataset
+- Evaluate on the specified dataset (typically validation set)
 - Print classification report and confusion matrix
 - Show top features by class
 - Save detailed results to `results/evaluation_results.csv`
@@ -109,10 +113,12 @@ This will:
 ```bash
 python src/label_quality.py \
     --model_path results/model.joblib \
-    --data_path data/twitter_financial_train.csv \
+    --data_path data/twitter_financial_valid.csv \
     --dataset_name twitter_financial \
     --output_dir results
 ```
+
+**Note**: Can be run on either training or validation data to analyze label quality.
 
 This will generate:
 - `misclassifications.csv`: Cases where model disagrees with labels

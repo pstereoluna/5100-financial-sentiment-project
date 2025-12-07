@@ -30,10 +30,17 @@ Social media financial posts are inherently **noisier** than news articles, maki
 **Source**: [Hugging Face](https://huggingface.co/datasets/Zeroshot/twitter-financial-news-sentiment)
 
 **Characteristics**:
-- **Samples**: ~9,500 Twitter financial posts
+- **Training samples**: ~9,500 Twitter financial posts
+- **Validation samples**: ~2,400 Twitter financial posts (completely independent hold-out set)
 - **Labels**: 3-class (0=Bearish/negative, 1=Bullish/positive, 2=Neutral) → unified to positive/neutral/negative
 - **Format**: CSV with `text` and `label` columns
 - **Style**: Real-world social media text with noise (hashtags, mentions, cashtags)
+
+**Data Splits**:
+- **Training set**: `twitter_financial_train.csv` (~9,500 samples) - used exclusively for training
+- **Validation set**: `twitter_financial_valid.csv` (~2,400 samples) - used exclusively for evaluation
+
+The validation set is completely independent from the training data, ensuring unbiased evaluation and more rigorous model assessment.
 
 **Dataset Characteristics**:
 - **Short text**: Average length ~15-20 words (typical of social media)
@@ -106,11 +113,13 @@ We use **multinomial logistic regression** for classification:
 
 ### 3.5 Model Training
 
-- **Train/Test Split**: 80/20 stratified split
-- **Random State**: 42 (for reproducibility)
+- **Training Data**: All samples from `twitter_financial_train.csv` (~9,500 samples)
+- **Validation Data**: Independent hold-out set from `twitter_financial_valid.csv` (~2,400 samples)
 - **Evaluation Metrics**: Accuracy, F1-score (macro), confusion matrix
 
 **Implementation**: `src/train.py`
+
+**Note**: Using a completely independent validation set (rather than a random split) ensures unbiased evaluation and more rigorous assessment of model generalization.
 
 ### 3.6 Label Quality Evaluation
 
@@ -335,10 +344,12 @@ financial-sentiment-project/
 ### B. Reproducibility
 
 To reproduce results:
-1. Download dataset: `data/twitter_financial_train.csv`
-2. Train model: `python src/train.py --data_path data/twitter_financial_train.csv --dataset_name twitter_financial`
-3. Evaluate: `python src/evaluate.py --model_path results/model.joblib --data_path data/twitter_financial_train.csv --dataset_name twitter_financial`
-4. Label quality: `python src/label_quality.py --model_path results/model.joblib --data_path data/twitter_financial_train.csv --dataset_name twitter_financial`
+1. Download datasets: 
+   - `data/twitter_financial_train.csv` (training set)
+   - `data/twitter_financial_valid.csv` (validation set)
+2. Train model: `python src/train.py --data_path data/twitter_financial_train.csv --valid_path data/twitter_financial_valid.csv --dataset_name twitter_financial`
+3. Evaluate: `python src/evaluate.py --model_path results/model.joblib --data_path data/twitter_financial_valid.csv --dataset_name twitter_financial`
+4. Label quality: `python src/label_quality.py --model_path results/model.joblib --data_path data/twitter_financial_valid.csv --dataset_name twitter_financial`
 
 ### C. Key Files
 

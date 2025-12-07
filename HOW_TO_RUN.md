@@ -41,11 +41,13 @@ DATASET_NAME = 'twitter_financial'
 ```bash
 python src/train.py \
     --data_path data/twitter_financial_train.csv \
+    --valid_path data/twitter_financial_valid.csv \
     --dataset_name twitter_financial \
-    --test_size 0.2 \
     --max_features 10000 \
     --model_path results/model.joblib
 ```
+
+**Note**: The validation set is completely independent from training data, ensuring unbiased evaluation.
 
 **Output:**
 - Model saved to: `results/model.joblib`
@@ -57,10 +59,12 @@ python src/train.py \
 ```bash
 python src/evaluate.py \
     --model_path results/model.joblib \
-    --data_path data/twitter_financial_train.csv \
+    --data_path data/twitter_financial_valid.csv \
     --dataset_name twitter_financial \
     --output_dir results
 ```
+
+**Note**: Typically evaluate on the validation set, but can evaluate on any dataset.
 
 **Output:**
 - Evaluation results: `results/evaluation_results.csv`
@@ -72,10 +76,12 @@ python src/evaluate.py \
 ```bash
 python src/label_quality.py \
     --model_path results/model.joblib \
-    --data_path data/twitter_financial_train.csv \
+    --data_path data/twitter_financial_valid.csv \
     --dataset_name twitter_financial \
     --output_dir results
 ```
+
+**Note**: Can be run on either training or validation data to analyze label quality.
 
 **Output:**
 - `misclassifications.csv`: Cases where model disagrees with labels
@@ -150,9 +156,9 @@ All results are saved to the `results/` directory:
 ## Command-Line Arguments
 
 ### `train.py`
-- `--data_path`: Path to dataset CSV file (required)
+- `--data_path`: Path to training dataset CSV file (required)
+- `--valid_path`: Path to validation dataset CSV file (required, completely independent from training)
 - `--dataset_name`: Must be `twitter_financial` (default)
-- `--test_size`: Test set proportion (default: 0.2)
 - `--max_features`: Maximum TF-IDF features (default: 10000)
 - `--model_path`: Path to save model (default: `results/model.joblib`)
 

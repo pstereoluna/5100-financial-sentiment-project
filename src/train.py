@@ -7,7 +7,6 @@ import numpy as np
 import joblib
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, classification_report
 import os
 import sys
@@ -21,9 +20,8 @@ from src.preprocess import preprocess_batch
 
 def train_model(
     data_path: str,
-    dataset_name: str = 'twitter_financial',  # Default to modern primary dataset
-    test_size: float = 0.2,
-    random_state: int = 42,
+    valid_path: str,
+    dataset_name: str = 'twitter_financial',
     max_features: int = 10000,
     model_save_path: str = 'results/model.joblib',
     results_dir: str = 'results'
@@ -32,10 +30,9 @@ def train_model(
     Train the financial sentiment classifier.
     
     Args:
-        data_path: Path to dataset file
+        data_path: Path to training dataset file
+        valid_path: Path to validation dataset file (completely independent from training)
         dataset_name: Dataset name (must be 'twitter_financial')
-        test_size: Proportion of data for testing
-        random_state: Random seed for reproducibility
         max_features: Maximum TF-IDF features
         model_save_path: Path to save trained model
         results_dir: Directory to save results
@@ -43,31 +40,43 @@ def train_model(
     # Create results directory if it doesn't exist
     os.makedirs(results_dir, exist_ok=True)
     
-    # Load dataset
-    print(f"Loading {dataset_name} dataset from {data_path}...")
+    # Load training dataset
+    print(f"Loading training {dataset_name} dataset from {data_path}...")
     from src.dataset_loader import load_dataset
-    df = load_dataset(dataset_name, data_path)
-    print(f"Loaded {len(df)} samples")
-    print(f"Label distribution:\n{df['label'].value_counts()}")
+    train_df = load_dataset(dataset_name, data_path)
+    print(f"Loaded {len(train_df)} training samples")
+    print(f"Training label distribution:\n{train_df['label'].value_counts()}")
     
-    # Preprocess text
-    print("Preprocessing text...")
-    df['cleaned_text'] = preprocess_batch(df['text'])
+    # Preprocess training text
+    print("Preprocessing training text...")
+    train_df['cleaned_text'] = preprocess_batch(train_df['text'])
     
     # Remove empty texts
-    df = df[df['cleaned_text'].str.len() > 0]
-    print(f"After preprocessing: {len(df)} samples")
+    train_df = train_df[train_df['cleaned_text'].str.len() > 0]
+    print(f"After preprocessing: {len(train_df)} training samples")
     
-    # Split train/test
-    X = df['cleaned_text'].values
-    y = df['label'].values
+    # Prepare training data
+    X_train = train_df['cleaned_text'].values
+    y_train = train_df['label'].values
     
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=random_state, stratify=y
-    )
+    # Load validation dataset (completely independent)
+    print(f"\nLoading validation {dataset_name} dataset from {valid_path}...")
+    valid_df = load_dataset(dataset_name, valid_path)
+    print(f"Loaded {len(valid_df)} validation samples")
+    print(f"Validation label distribution:\n{valid_df['label'].value_counts()}")
     
-    print(f"Train set: {len(X_train)} samples")
-    print(f"Test set: {len(X_test)} samples")
+    # Preprocess validation text
+    print("Preprocessing validation text...")
+    valid_df['cleaned_text'] = preprocess_batch(valid_df['text'])
+    valid_df = valid_df[valid_df['cleaned_text'].str.len() > 0]
+    print(f"After preprocessing: {len(valid_df)} validation samples")
+    
+    # Prepare validation data
+    X_valid = valid_df['cleaned_text'].values
+    y_valid = valid_df['label'].values
+    
+    print(f"\nTrain set: {len(X_train)} samples")
+    print(f"Validation set: {len(X_valid)} samples")
     
     # Build and train model
     print("Building model...")
@@ -76,13 +85,13 @@ def train_model(
     print("Training model...")
     model.fit(X_train, y_train)
     
-    # Evaluate on test set
-    print("Evaluating on test set...")
-    y_pred = model.predict(X_test)
+    # Evaluate on validation set
+    print("Evaluating on validation set...")
+    y_pred = model.predict(X_valid)
     
     # Print classification report
-    print("\nClassification Report:")
-    print(classification_report(y_test, y_pred))
+    print("\nClassification Report (on validation set):")
+    print(classification_report(y_valid, y_pred))
     
     # Save model
     print(f"\nSaving model to {model_save_path}...")
@@ -90,7 +99,7 @@ def train_model(
     joblib.dump(model, model_save_path)
     
     # Create and save confusion matrix
-    cm = confusion_matrix(y_test, y_pred)
+    cm = confusion_matrix(y_valid, y_pred)
     classes = model.named_steps['classifier'].classes_
     
     plt.figure(figsize=(10, 8))
@@ -109,9 +118,9 @@ def train_model(
     summary = {
         'dataset': dataset_name,
         'train_samples': len(X_train),
-        'test_samples': len(X_test),
+        'validation_samples': len(X_valid),
         'max_features': max_features,
-        'test_accuracy': (y_pred == y_test).mean()
+        'validation_accuracy': (y_pred == y_valid).mean()
     }
     
     summary_path = os.path.join(results_dir, 'training_summary.txt')
@@ -120,8 +129,8 @@ def train_model(
         f.write("=" * 50 + "\n")
         for key, value in summary.items():
             f.write(f"{key}: {value}\n")
-        f.write("\nClassification Report:\n")
-        f.write(classification_report(y_test, y_pred))
+        f.write("\nClassification Report (on validation set):\n")
+        f.write(classification_report(y_valid, y_pred))
     
     print(f"Training summary saved to {summary_path}")
     print("\nTraining completed!")
@@ -132,12 +141,12 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser(description='Train financial sentiment classifier')
     parser.add_argument('--data_path', type=str, required=True,
-                        help='Path to dataset file')
+                        help='Path to training dataset file')
+    parser.add_argument('--valid_path', type=str, required=True,
+                        help='Path to validation dataset file (completely independent from training)')
     parser.add_argument('--dataset_name', type=str, default='twitter_financial',
                         choices=['twitter_financial'],
                         help='Dataset name (must be twitter_financial)')
-    parser.add_argument('--test_size', type=float, default=0.2,
-                        help='Test set proportion')
     parser.add_argument('--max_features', type=int, default=10000,
                         help='Maximum TF-IDF features')
     parser.add_argument('--model_path', type=str, default='results/model.joblib',
@@ -147,8 +156,8 @@ if __name__ == '__main__':
     
     train_model(
         data_path=args.data_path,
+        valid_path=args.valid_path,
         dataset_name=args.dataset_name,
-        test_size=args.test_size,
         max_features=args.max_features,
         model_save_path=args.model_path
     )
