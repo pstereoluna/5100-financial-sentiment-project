@@ -15,7 +15,7 @@ python -c "from datasets import load_dataset; ds = load_dataset('Zeroshot/twitte
 **Option 2: Manual Download**
 - Download from [Hugging Face](https://huggingface.co/datasets/Zeroshot/twitter-financial-news-sentiment)
 - Place CSV file in `data/twitter_financial_train.csv`
-- Expected format: CSV with `text` and `label` columns (labels: 0=neutral, 1=positive, 2=negative)
+- Expected format: CSV with `text` and `label` columns (labels: 0=Bearish/negative, 1=Bullish/positive, 2=Neutral)
 
 ### Step 2: Run Everything in Jupyter Notebook (Recommended)
 

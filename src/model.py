@@ -34,7 +34,8 @@ def build_model(max_features: int = 10000, ngram_range: Tuple[int, int] = (1, 2)
     classifier = LogisticRegression(
         max_iter=1000,
         random_state=42,
-        solver='lbfgs'
+        solver='lbfgs',
+        class_weight='balanced'  # Handle class imbalance
         # Note: multi_class='multinomial' is now default and deprecated parameter removed
     )
     

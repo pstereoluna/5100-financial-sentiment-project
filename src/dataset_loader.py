@@ -22,9 +22,9 @@ def load_twitter_financial(file_path: str) -> pd.DataFrame:
     Load Twitter Financial News Sentiment dataset (Zeroshot, 2023).
     
     This dataset contains Twitter financial posts with 3-class sentiment labels:
-    - 0 = neutral
-    - 1 = positive
-    - 2 = negative
+    - 0 = Bearish (negative)
+    - 1 = Bullish (positive)
+    - 2 = Neutral
     
     Labels are automatically mapped to unified format: positive, neutral, negative.
     
@@ -83,15 +83,15 @@ def load_twitter_financial(file_path: str) -> pd.DataFrame:
         if pd.isna(value):
             return 'neutral'
         
-        # Try numeric mapping first (0=neutral, 1=positive, 2=negative)
+        # Try numeric mapping first (0=Bearish/negative, 1=Bullish/positive, 2=Neutral)
         try:
             num_val = int(value)
             if num_val == 0:
-                return 'neutral'
+                return 'negative'  # Bearish = negative sentiment
             elif num_val == 1:
-                return 'positive'
+                return 'positive'  # Bullish = positive sentiment
             elif num_val == 2:
-                return 'negative'
+                return 'neutral'   # Neutral
         except (ValueError, TypeError):
             pass
         
@@ -105,10 +105,10 @@ def load_twitter_financial(file_path: str) -> pd.DataFrame:
             'bearish': 'negative',
             'negative': 'negative',
             'neg': 'negative',
-            '2': 'negative',
+            '0': 'negative',      # Bearish = negative sentiment
             'neutral': 'neutral',
             'neu': 'neutral',
-            '0': 'neutral',
+            '2': 'neutral',       # Neutral
         }
         return label_mapping.get(value_str, 'neutral')
     

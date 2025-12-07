@@ -25,7 +25,7 @@ This project aligns with the CS5100 research proposal focusing on:
 **Twitter Financial News Sentiment** (Zeroshot, 2023):
 - **Source**: Real Twitter financial posts
 - **Samples**: ~9,500 tweets
-- **Labels**: 3-class (0=neutral, 1=positive, 2=negative) → unified to positive/neutral/negative
+- **Labels**: 3-class (0=Bearish/negative, 1=Bullish/positive, 2=Neutral) → unified to positive/neutral/negative
 - **Format**: CSV with `text` and `label` columns
 - **Characteristics**: 
   - Short, informal text (typical of social media)

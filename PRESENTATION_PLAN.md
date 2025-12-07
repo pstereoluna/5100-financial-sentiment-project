@@ -47,16 +47,16 @@
 **Slide 4 (Results Overview) - ~50 seconds**
 - "Thank you, [Person A]. Let me present our results."
 - "Our model achieved an accuracy of approximately 78% and a macro F1-score of 0.66 on a test set of about 1,900 samples."
-- "Looking at per-class performance, the negative class has high recall at 0.96, which makes sense since it's the dominant class at 64.74% of the dataset."
-- "The neutral class is the most challenging, with only 0.36 recall, representing only 15.11% of the data. Positive class shows moderate recall at 0.51."
-- "The key finding here is that the neutral class is the most difficult to classify."
+- "Looking at per-class performance, the neutral class is the dominant class at approximately 65% of the dataset."
+- "The positive class represents about 20% of the data, and the negative class is the minority at about 15%."
+- "The key finding here is that minority classes (positive and negative) are more challenging to classify due to class imbalance."
 
 **Slide 5 (Confusion Matrix Insights) - ~40 seconds**
 - "The confusion matrix reveals several important patterns."
-- "The negative class shows high accuracy, which is expected given its dominance in the dataset."
-- "The neutral class is frequently misclassified as either negative or positive, indicating the challenge of identifying neutral sentiment in social-media text."
+- "The neutral class shows high accuracy, which is expected given its dominance in the dataset at approximately 65%."
+- "The minority classes (positive and negative) are frequently misclassified as neutral, indicating the challenge of identifying sentiment in social-media text."
 - "There's also some confusion between positive and negative classes."
-- "The class imbalance, with a 4.3-to-1 ratio of negative to neutral, significantly affects performance on minority classes."
+- "The class imbalance, with a 4.3-to-1 ratio of neutral to negative, significantly affects performance on minority classes."
 
 **Slide 6 (Interpretability - Top Features) - ~40 seconds**
 - "One advantage of our baseline model is interpretability through feature weights."

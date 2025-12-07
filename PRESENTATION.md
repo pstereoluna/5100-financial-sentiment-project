@@ -55,11 +55,11 @@
 - **Test set**: ~1,900 samples
 
 **Per-Class Performance**
-- **Negative**: High recall (0.96) - dominant class (64.74%)
-- **Neutral**: Low recall (0.36) - most challenging (15.11%)
-- **Positive**: Moderate recall (0.51) - 20.15%
+- **Neutral**: High recall - dominant class (~65%)
+- **Positive**: Moderate recall (~20%)
+- **Negative**: Lower recall - minority class (~15%)
 
-**Key Finding**: Neutral class is most difficult
+**Key Finding**: Neutral class is majority, but minority classes (positive/negative) are more challenging
 
 ---
 
@@ -72,7 +72,7 @@
 - Neutral: Many misclassified as negative/positive
 - Positive: Some confusion with negative
 
-**Class Imbalance Impact**: 4.3:1 ratio (negative to neutral) affects minority class performance
+**Class Imbalance Impact**: 4.3:1 ratio (neutral to negative) affects minority class performance
 
 ---
 
