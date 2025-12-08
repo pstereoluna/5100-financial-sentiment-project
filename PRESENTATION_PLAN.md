@@ -74,11 +74,12 @@
 - "These feature weights align with intuitive financial sentiment patterns, demonstrating the model's interpretability."
 
 **Page 8 (Label Quality Evaluation) - ~50 seconds**
-- "Now, let me present our main research contribution: comprehensive label quality evaluation."
-- "On our validation set of 2,383 samples, we identified 469 misclassifications, 494 ambiguous predictions, and 132 potentially noisy labels using a stricter threshold."
-- "The analysis reveals patterns in dataset ambiguity, including 524 cases in the neutral ambiguous zone and 497 borderline cases between classes."
-- "Approximately 21% of predictions exhibited low confidence, indicating dataset-inherent ambiguity in social-media text."
-- "This label quality framework provides insights into dataset reliability and annotation inconsistencies, which is more valuable than raw accuracy metrics alone."
+- "Now, let me present our main research contribution: label quality evaluation."
+- "Beyond just reporting accuracy, we analyzed whether 'errors' are truly model failures or annotation inconsistencies."
+- "We identified 132 potentially noisy labels. More importantly, 6 of these had over 85% model confidence — meaning the model was very sure, but technically 'wrong'."
+- "Let me show you two examples. First, 'No, The Fed Won't Save The Market.' This was labeled as NEGATIVE, but our model predicted NEUTRAL with 90% confidence. It's really just a news headline — arguably not expressing sentiment."
+- "Second, 'These Stocks Could Bounce High in January.' Labeled as NEUTRAL, but the model saw bullish language like 'bounce high' and predicted POSITIVE with 90% confidence."
+- "This analysis reveals that some 'errors' are actually annotation inconsistencies — a valuable insight beyond raw accuracy metrics."
 - **Transition**: "Now I'll hand it off to [Person C] to discuss limitations and conclusions."
 
 ---
@@ -150,4 +151,3 @@
 - **Smooth Transitions**: Clear handoff phrases between speakers
 - **Focus**: Person B emphasizes the main research contribution (label quality)
 - **Conclusion**: Person C wraps up with limitations and future work
-

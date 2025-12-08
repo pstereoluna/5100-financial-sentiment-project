@@ -92,20 +92,29 @@
 
 ---
 
-## Slide 7: Label Quality Analysis (Core Contribution)
+## Slide 7: Label Quality Evaluation (Core Contribution)
 
-### Comprehensive Label Quality Evaluation
+### Beyond Accuracy: Identifying Annotation Inconsistencies
 
-**Key Metrics** (on validation set with 2,383 samples)
-- **Misclassifications**: 469 instances
-- **Ambiguous Predictions**: 494 instances
-- **Noisy Labels**: 132 instances (using stricter threshold: true_label_prob < 0.2)
-- **Neutral Ambiguous Zone**: 524 instances
-- **Borderline Cases**: 497 instances
+**Key Finding**
+- **132** potential noisy labels identified
+- Of these, **6 cases** show >85% model confidence — suggesting the labels may be wrong, not the model
 
-**Key Finding**: Approximately 21% of predictions exhibited low confidence, indicating dataset-inherent ambiguity in social-media text
+**Real Examples**
 
-**Research Contribution**: Label quality framework provides insights into dataset reliability and annotation inconsistencies. The stricter noisy label threshold (0.2) flags only high-confidence disagreements as potential label errors.
+*Example 1:*
+- Tweet: "No, The Fed Won't Save The Market - Here's Why"
+- Human Label: NEGATIVE ❌
+- Model Prediction: NEUTRAL (90% confidence) ✓
+- → News headline reporting, arguably not sentiment
+
+*Example 2:*
+- Tweet: "These Stocks Could Bounce High in January"
+- Human Label: NEUTRAL ❌
+- Model Prediction: POSITIVE (90% confidence) ✓
+- → Contains bullish language ("bounce high")
+
+**Key Insight**: When the model disagrees with high confidence, it often reveals annotation inconsistencies rather than model failures.
 
 ---
 
