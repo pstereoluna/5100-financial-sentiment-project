@@ -204,7 +204,7 @@ def detect_noisy_labels(
         else 0.0
         for i in range(len(y_true))
     ])
-    low_true_conf = true_label_probs < 0.4
+    low_true_conf = true_label_probs < 0.2
     
     # Combine heuristics
     noisy_mask = high_conf_misclass | (short_texts & (y_true != y_pred)) | low_true_conf
