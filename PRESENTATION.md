@@ -96,16 +96,16 @@
 
 ### Comprehensive Label Quality Evaluation
 
-**Key Metrics**
-- **Misclassifications**: 1,414 cases (14.84%)
-- **Ambiguous Predictions**: 1,262 cases (13.25%)
-- **Noisy Labels**: 1,319 potentially problematic labels
-- **Neutral Ambiguous Zone**: 726 cases
-- **Borderline Cases**: 1,172 cases
+**Key Metrics** (on validation set with 2,383 samples)
+- **Misclassifications**: 469 instances
+- **Ambiguous Predictions**: 494 instances
+- **Noisy Labels**: 132 instances (using stricter threshold: true_label_prob < 0.2)
+- **Neutral Ambiguous Zone**: 524 instances
+- **Borderline Cases**: 497 instances
 
-**Key Finding**: 25% of predictions have low confidence → dataset-inherent ambiguity in social-media text
+**Key Finding**: Approximately 21% of predictions exhibited low confidence, indicating dataset-inherent ambiguity in social-media text
 
-**Research Contribution**: Label quality framework provides insights into dataset reliability and annotation inconsistencies
+**Research Contribution**: Label quality framework provides insights into dataset reliability and annotation inconsistencies. The stricter noisy label threshold (0.2) flags only high-confidence disagreements as potential label errors.
 
 ---
 
